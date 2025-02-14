@@ -190,6 +190,7 @@ vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower win
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 vim.api.nvim_set_keymap('n', '<C-[>', ':NvimTreeToggle<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', 'C-b', 'NvimTreeToggle<CR>', { noremap = true, script = 'true' })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -320,6 +321,16 @@ require('lazy').setup({
       require('toggleterm').setup {
         size = 10, -- Default terminal height
         open_mapping = [[<C-`>]], -- You can change this if you prefer a different key for opening the terminal
+        direction = 'horizontal', -- Make the terminal horizontal
+      }
+    end,
+  },
+  {
+    'akinsho/toggleterm.nvim',
+    config = function()
+      require('toggleterm').setup {
+        size = 10, -- Default terminal height
+        open_mapping = [[<C-h>]], -- You can change this if you prefer a different key for opening the terminal
         direction = 'horizontal', -- Make the terminal horizontal
       }
     end,
