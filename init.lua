@@ -281,33 +281,47 @@ require('lazy').setup({
       vim.cmd 'colorscheme tokyonight-night'
     end,
   },
-  {
-    'epwalsh/obsidian.nvim',
-    version = '*', -- Use latest release
-    lazy = true,
-    dependencies = {
-      'nvim-lua/plenary.nvim',
-    },
-    config = function()
-      vim.opt.conceallevel = 2
 
-      vim.keymap.set('n', 'gf', function()
-        if require('obsidian').util.cursor_on_markdown_link() then
-          return '<cmd>ObsidianFollowLink<CR>'
-        else
-          return 'gf'
-        end
-      end, { noremap = false, expr = true })
-    end,
-    opts = {
-      workspaces = {
-        {
-          name = 'Personal Graph',
-          path = vim.fn.expand '/home/nav/ASU Dropbox/Navraj Sikand/Obsidian-vaults/Personal Graph',
-        },
+  {
+    'folke/zen-mode.nvim',
+    cmd = 'ZenMode', -- load when the ZenMode command is used
+    keys = {
+      {
+        '<leader>tz',
+        '<cmd>ZenMode<CR>',
+        desc = 'Toggle Zen Mode',
       },
     },
+    config = function()
+      require('zen-mode').setup {
+        -- You can add your zen mode configuration options here
+        -- For example:
+        -- window = {
+        --   backdrop = 1,
+        --   width = 0.85,
+        --   height = 1,
+        --   options = {
+        --     signcolumn = "no",
+        --     number = false,
+        --     cursorline = false,
+        --     cursorcolumn = false,
+        --   },
+        -- },
+      }
+    end,
   },
+
+  {
+    'bullets-vim/bullets.vim',
+    ft = { 'markdown', 'text' },
+    config = function()
+      -- Optional configuration if you want to adjust bullet style or behavior
+      vim.g.bullets_enabled_file_types = { 'markdown', 'text' }
+      -- For example, to disable extra padding:
+      -- vim.g.bullets_pad_right = 0
+    end,
+  },
+  { 'EdenEast/nightfox.nvim' },
   {
     'projekt0n/github-nvim-theme',
     name = 'github-theme',
@@ -762,7 +776,9 @@ require('lazy').setup({
         -- pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
-        --
+
+        prismals = {},
+
         -- Some languages (like typescript) have entire language plugins that can be useful:
         --    https://github.com/pmizio/typescript-tools.nvim
         --
@@ -891,12 +907,12 @@ require('lazy').setup({
         -- python = { "isort", "black" },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        javascript = { 'prettierd', stop_after_first = true },
-        json = { 'prettierd' },
-        html = { 'prettierd' },
-        -- markdown = { 'prettierd' },
-        typescript = { 'prettierd' },
-        typescriptreact = { 'prettierd' },
+        javascript = { 'prettier', stop_after_first = true },
+        json = { 'prettier' },
+        html = { 'prettier' },
+        markdown = { 'prettier' },
+        typescript = { 'prettier' },
+        typescriptreact = { 'prettier' },
         rust = { 'rustfmt' },
       },
     },
@@ -1048,10 +1064,6 @@ require('lazy').setup({
   --     vim.cmd.hi 'Comment gui=none'
   --   end,
   -- },
-
-  -- Highlight todo, notes, etc in comments
-  { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
-
   {
     'windwp/nvim-ts-autotag',
     config = function()
@@ -1108,8 +1120,34 @@ require('lazy').setup({
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     opts = {},
     config = function()
+      local function getWords()
+        if vim.bo.filetype == 'md' or vim.bo.filetype == 'txt' or vim.bo.filetype == 'markdown' then
+          if vim.fn.wordcount().visual_words == 1 then
+            return tostring(vim.fn.wordcount().visual_words) .. ' word'
+          elseif not (vim.fn.wordcount().visual_words == nil) then
+            return tostring(vim.fn.wordcount().visual_words) .. ' words'
+          else
+            return tostring(vim.fn.wordcount().words) .. ' words'
+          end
+        else
+          return ''
+        end
+      end
+
       require('lualine').setup {
         options = { theme = 'nord' },
+
+        sections = {
+          lualine_a = { 'mode' },
+          lualine_b = { 'branch', 'diff', 'diagnostics' },
+          lualine_x = {
+            'encoding',
+            'filetype',
+            { getWords },
+          },
+          lualine_y = { 'progress' },
+          lualine_z = { 'location' },
+        },
       }
 
       -- Automatically trigger build on save
@@ -1160,6 +1198,31 @@ require('lazy').setup({
     --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
     --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
     --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+  },
+
+  {
+    'epwalsh/obsidian.nvim',
+    version = '*', -- recommended, use latest release instead of latest commit
+    lazy = true,
+    ft = 'markdown',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+    },
+    opts = {
+      workspaces = {
+        {
+          name = 'personal',
+          path = '~/ASU Dropbox/Navraj Sikand/Obsidian-vaults/b2',
+        },
+      },
+    },
+    keys = {
+      {
+        '<leader>zz',
+        '<cmd>ObsidianToday<CR>',
+        desc = "Open today's Obsidian daily note",
+      },
+    },
   },
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
@@ -1222,3 +1285,73 @@ require('lazy').setup({
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+
+-- Enable folding by indent for markdown files
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'markdown',
+  callback = function()
+    vim.opt_local.foldmethod = 'indent'
+    vim.opt_local.foldlevel = 99 -- Start with folds open
+    vim.o.conceallevel = 1
+    vim.opt_local.textwidth = 80
+    vim.opt_local.formatoptions:append 't'
+
+    function _G.paste_image()
+      -- Prompt for the image name (without extension)
+      local img_name = vim.fn.input 'Image name (without extension): '
+      if img_name == '' then
+        print 'No image name provided!'
+        return
+      end
+
+      -- Determine the attachments directory and ensure it exists
+      local cwd = vim.fn.getcwd()
+      local attachments_dir = cwd .. '/Attachments'
+      vim.fn.mkdir(attachments_dir, 'p')
+
+      -- Build the file path for the PNG image
+      local file_path = attachments_dir .. '/' .. img_name .. '.png'
+
+      -- Pick the correct command to retrieve the image from clipboard
+      local sys_name = vim.loop.os_uname().sysname
+      local cmd = ''
+      if sys_name == 'Darwin' then
+        -- For macOS; ensure you have pngpaste installed (e.g. via brew install pngpaste)
+        cmd = 'pngpaste ' .. vim.fn.shellescape(file_path)
+      else
+        -- For Linux; ensure xclip is installed
+        cmd = 'xclip -selection clipboard -t image/png -o > ' .. vim.fn.shellescape(file_path)
+      end
+
+      -- Execute the command to save the image
+      local ret = os.execute(cmd)
+      if ret ~= 0 then
+        print 'Failed to save image from clipboard.'
+        return
+      end
+
+      -- Prepare the Markdown image link text
+      local link = string.format('![[%s]]', img_name .. '.png')
+
+      -- Get the current cursor position: row (1-indexed) and col (0-indexed)
+      local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+      -- Use nvim_buf_set_text to insert the link at the cursor position
+      -- Note: row needs to be adjusted to 0-indexed for this API.
+      vim.api.nvim_buf_set_text(0, row - 1, col, row - 1, col, { link })
+
+      print('Image saved to ' .. file_path)
+    end
+
+    -- Optionally, create a user command to call the function explicitly:
+    vim.api.nvim_create_user_command('PasteImage', _G.paste_image, {})
+
+    -- And map it to <leader>ip if desired:
+    vim.api.nvim_set_keymap('n', '<leader>ip', '<cmd>lua _G.paste_image()<CR>', { noremap = true, silent = true })
+  end,
+})
+vim.api.nvim_set_keymap('n', '<Tab>', 'za', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('i', '<Tab>', '<C-T>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('i', '<S-Tab>', '<C-D>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('v', '<Tab>', '>gv', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('v', '<S-Tab>', '<gv', { noremap = true, silent = true })
+vim.keymap.set('i', '<C-BS>', '<C-w>', { noremap = true, silent = true })
