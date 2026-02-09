@@ -178,18 +178,25 @@ Installed plugin set is pinned in `lazy-lock.json`. Main libraries include:
   - `rickhowe/wrapwidth`
   - `chomosuke/typst-preview.nvim`
 
-## Non-root setup checklist
+## Setup checklist
 
-Run these first:
+### macOS (Homebrew)
 
 ```bash
-mamba install -y -c conda-forge git make unzip ripgrep fd-find fzf cmake ninja nodejs
+brew install neovim git make unzip ripgrep fd fzf cmake ninja node lazygit typst
+```
+
+### Linux / non-root environments
+
+```bash
+mamba install -y -c conda-forge neovim git make unzip ripgrep fd-find fzf cmake ninja nodejs
 mamba install -y -c conda-forge lazygit typst
 ```
 
 If a package is not available in your environment:
 1. Check modules: `module avail <name>` then `module load <name>`.
 2. Use user-local install (`npm`, `pip --user`, or local binary in `~/.local/bin`).
+3. `fd` is usually `fd` on macOS and `fd-find` on Debian/Ubuntu.
 
 Useful checks:
 
