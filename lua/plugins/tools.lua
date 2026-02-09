@@ -129,7 +129,7 @@ return {
     'Civitasv/cmake-tools.nvim',
     config = function()
       require('cmake-tools').setup {
-        cmake_command = 'clang++', -- Optional: specify the compiler as clang
+        cmake_command = 'cmake',
         cmake_build_directory = 'build', -- Directory for the build output
         cmake_generate_options = { '-DCMAKE_EXPORT_COMPILE_COMMANDS=YES' }, -- Optional: configure build options
       }

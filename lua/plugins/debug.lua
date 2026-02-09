@@ -80,6 +80,23 @@ return {
   config = function()
     local dap = require 'dap'
     local dapui = require 'dapui'
+    local function resolve_js_debugger_path()
+      local data_dir = vim.fn.stdpath 'data'
+      local home_dir = vim.fn.expand '$HOME'
+      local candidates = {
+        data_dir .. '/mason/packages/js-debug-adapter',
+        data_dir .. '/mason/packages/js-debug-adapter/js-debug',
+        home_dir .. '/vscode-js-debug',
+      }
+
+      for _, path in ipairs(candidates) do
+        if vim.fn.isdirectory(path) == 1 then
+          return path
+        end
+      end
+
+      return nil
+    end
 
     require('mason-nvim-dap').setup {
       -- Makes a best effort to setup the various debuggers with
@@ -93,7 +110,7 @@ return {
       -- You'll need to check that you have the required things installed
       -- online, please don't ask me how to install them :)
       ensure_installed = {
-        -- Update this to ensure that you have the debuggers for the langs you want
+        'js-debug-adapter',
       },
     }
 
@@ -144,15 +161,22 @@ return {
     --   },
     -- }
 
-    require('dap-vscode-js').setup {
-      -- node_path = "node", -- Path of node executable. Defaults to $NODE_PATH, and then "node"
-      debugger_path = '/home/nav/vscode-js-debug', -- Path to vscode-js-debug installation.
-      -- debugger_cmd = { "js-debug-adapter" }, -- Command to use to launch the debug server. Takes precedence over `node_path` and `debugger_path`.
-      adapters = { 'pwa-node', 'pwa-chrome', 'node-terminal' }, -- which adapters to register in nvim-dap
-      -- log_file_path = "(stdpath cache)/dap_vscode_js.log" -- Path for file logging
-      -- log_file_level = false -- Logging level for output to file. Set to false to disable file logging.
-      -- log_console_level = vim.log.levels.ERROR -- Logging level for output to console. Set to false to disable console output.
-    }
+    local debugger_path = resolve_js_debugger_path()
+    if debugger_path then
+      require('dap-vscode-js').setup {
+        -- node_path = "node", -- Path of node executable. Defaults to $NODE_PATH, and then "node"
+        debugger_path = debugger_path,
+        -- debugger_cmd = { "js-debug-adapter" }, -- Command to use to launch the debug server. Takes precedence over `node_path` and `debugger_path`.
+        adapters = { 'pwa-node', 'pwa-chrome', 'node-terminal' }, -- which adapters to register in nvim-dap
+        -- log_file_path = "(stdpath cache)/dap_vscode_js.log" -- Path for file logging
+        -- log_file_level = false -- Logging level for output to file. Set to false to disable file logging.
+        -- log_console_level = vim.log.levels.ERROR -- Logging level for output to console. Set to false to disable console output.
+      }
+    else
+      vim.schedule(function()
+        vim.notify('nvim-dap-vscode-js: js-debug-adapter not found. Install via Mason or clone to ~/vscode-js-debug', vim.log.levels.WARN)
+      end)
+    end
 
     for _, language in ipairs { 'typescript', 'javascript' } do
       require('dap').configurations[language] = {

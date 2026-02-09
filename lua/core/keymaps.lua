@@ -46,6 +46,8 @@ vim.keymap.set('n', '<M-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 
 vim.api.nvim_set_keymap('n', '<C-b>', ':NvimTreeToggle<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<C-S>', ':w<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<C-s>', ':w<CR>', { noremap = true, silent = true, desc = 'Save file' })
+vim.keymap.set('n', '<C-q>', ':q!<CR>', { noremap = true, silent = true, desc = 'Force quit without saving' })
 
 -- Better file operations
 vim.keymap.set('n', '<leader>ww', '<C-W>p', { desc = '[W]indow: Focus previous' })
