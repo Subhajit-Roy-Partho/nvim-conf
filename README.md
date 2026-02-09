@@ -30,11 +30,11 @@ On first start, plugins are installed automatically by `lazy.nvim`.
 ## LSP, completion, formatting, linting
 - LSP stack: `nvim-lspconfig`, `mason.nvim`, `mason-lspconfig`, `mason-tool-installer`
 - Configured language servers:
-  - `clangd`, `prismals`, `svelte`, `ts_ls`, `pyright`, `tailwindcss`, `lua_ls`, `rust_analyzer`
+  - `clangd`, `pyright`, `lua_ls`, `rust_analyzer`
 - Completion stack:
   - `nvim-cmp`, `LuaSnip`, `cmp-nvim-lsp`, `cmp-path`, `cmp_luasnip`, `friendly-snippets`
 - Formatting:
-  - `conform.nvim` with formatters per filetype (Lua/JS/TS/JSON/HTML/Markdown/Python/Rust)
+  - `conform.nvim` with formatters per filetype (Lua/JSON/HTML/Markdown/Python/Rust)
 - Linting:
   - `nvim-lint` (hooks configured, default linters mostly left open/customizable)
 
@@ -44,9 +44,8 @@ On first start, plugins are installed automatically by `lazy.nvim`.
 - TODO comment highlighting (`todo-comments.nvim`)
 
 ## Debugging
-- `nvim-dap`, `nvim-dap-ui`, `mason-nvim-dap`, `nvim-dap-vscode-js`
-- JS/TS adapters configured (`pwa-node`, `pwa-chrome`, `node-terminal`)
-- JS debug adapter path now resolved dynamically (Mason path first, then `~/vscode-js-debug`)
+- `nvim-dap`, `nvim-dap-ui`, `mason-nvim-dap`
+- JavaScript/TypeScript debugging support is intentionally disabled
 
 ## UI and writing tools
 - Theme: `vague.nvim` (Catppuccin also configured)
@@ -164,7 +163,6 @@ Installed plugin set is pinned in `lazy-lock.json`. Main libraries include:
   - `mfussenegger/nvim-dap`
   - `rcarriga/nvim-dap-ui`
   - `jay-babu/mason-nvim-dap.nvim`
-  - `mxsdev/nvim-dap-vscode-js`
   - `akinsho/toggleterm.nvim`
   - `numToStr/FTerm.nvim`
 - UI/theme:

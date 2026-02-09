@@ -157,13 +157,10 @@ return {
         -- python = { "isort", "black" },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        javascript = { 'prettier', stop_after_first = true },
         json = { 'prettier' },
         html = { 'prettier' },
         markdown = { 'prettier' },
         python = { 'ruff_format', 'ruff_fix' },
-        typescript = { 'prettier' },
-        typescriptreact = { 'prettier' },
         rust = { 'rustfmt' },
 
         formatters = {

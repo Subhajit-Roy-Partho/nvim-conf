@@ -5,7 +5,10 @@ return {
   {
     'nvim-tree/nvim-tree.lua',
     version = '*',
-    lazy = false,
+    cmd = { 'NvimTreeToggle', 'NvimTreeFocus', 'NvimTreeFindFile' },
+    keys = {
+      { '<C-b>', '<cmd>NvimTreeToggle<CR>', desc = 'Toggle file tree' },
+    },
     dependencies = {
       'nvim-tree/nvim-web-devicons',
     },
@@ -127,6 +130,15 @@ return {
   -- CMake tools
   {
     'Civitasv/cmake-tools.nvim',
+    cmd = {
+      'CMakeGenerate',
+      'CMakeBuild',
+      'CMakeRun',
+      'CMakeDebug',
+      'CMakeClean',
+      'CMakeOpenExecutor',
+      'CMakeCloseExecutor',
+    },
     config = function()
       require('cmake-tools').setup {
         cmake_command = 'cmake',
@@ -161,6 +173,16 @@ return {
   -- Better terminal integration
   {
     'numToStr/FTerm.nvim',
+    keys = {
+      {
+        '<A-i>',
+        function()
+          require('FTerm').toggle()
+        end,
+        mode = { 'n', 't' },
+        desc = 'Toggle floating terminal',
+      },
+    },
     config = function()
       require('FTerm').setup {
         border = 'single',
@@ -169,28 +191,28 @@ return {
           width = 0.9,
         },
       }
-      vim.keymap.set('n', '<A-i>', '<CMD>lua require("FTerm").toggle()<CR>', { desc = 'Toggle floating terminal' })
-      vim.keymap.set('t', '<A-i>', '<C-\\><C-n><CMD>lua require("FTerm").toggle()<CR>', { desc = 'Toggle floating terminal' })
     end,
   },
 
   -- Enhanced navigation
   {
     'phaazon/hop.nvim',
+    keys = {
+      { '<leader>hw', '<cmd>HopWord<cr>', desc = '[H]op [W]ord navigation' },
+      { '<leader>hl', '<cmd>HopLine<cr>', desc = '[H]op [L]ine navigation' },
+      { '<leader>hc', '<cmd>HopChar1<cr>', desc = '[H]op [C]haracter navigation' },
+    },
     config = function()
       require('hop').setup {
         keys = 'etovxqpdygfblzhckisuran',
       }
-      vim.keymap.set('n', '<leader>hw', '<cmd>HopWord<cr>', { desc = '[H]op [W]ord navigation' })
-      vim.keymap.set('n', '<leader>hl', '<cmd>HopLine<cr>', { desc = '[H]op [L]ine navigation' })
-      vim.keymap.set('n', '<leader>hc', '<cmd>HopChar1<cr>', { desc = '[H]op [C]haracter navigation' })
     end,
   },
 
   -- Typst preview
   {
     'chomosuke/typst-preview.nvim',
-    lazy = false, -- or ft = 'typst'
+    ft = 'typst',
     version = '1.*',
     opts = {}, -- lazy.nvim will implicitly calls `setup {}`
   },

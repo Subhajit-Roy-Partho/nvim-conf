@@ -17,6 +17,7 @@ return {
   -- LSP UI enhancements
   {
     'nvimdev/lspsaga.nvim',
+    event = 'LspAttach',
     config = function()
       require('lspsaga').setup {}
     end,
@@ -46,6 +47,7 @@ return {
   -- Enhanced code actions UI
   {
     'aznhe21/actions-preview.nvim',
+    cmd = 'ActionsPreview',
     config = function()
       require('actions-preview').setup({
         backend = { 'telescope', 'nui' },
@@ -61,6 +63,7 @@ return {
   -- Main LSP Configuration
   {
     'neovim/nvim-lspconfig',
+    event = { 'BufReadPre', 'BufNewFile' },
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for Neovim
       -- Mason must be loaded before its dependents so we need to set it up here.

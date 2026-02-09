@@ -5,7 +5,7 @@ return {
   {
     'catppuccin/nvim',
     name = 'catppuccin',
-    priority = 1000,
+    lazy = true,
     config = function()
       require('catppuccin').setup {
         -- no_italic = true,
@@ -99,6 +99,7 @@ return {
   -- Statusline
   {
     'nvim-lualine/lualine.nvim',
+    event = 'VeryLazy',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     opts = {},
     config = function()
@@ -130,6 +131,7 @@ return {
   -- Bufferline
   {
     'akinsho/bufferline.nvim',
+    event = 'VeryLazy',
     dependencies = { 'kyazdani42/nvim-web-devicons' }, -- optional, for better icons
     config = function()
       require('bufferline').setup {}
@@ -173,7 +175,7 @@ return {
   -- Which key
   { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
-    event = 'VimEnter', -- Sets the loading event to 'VimEnter'
+    event = 'VeryLazy',
     opts = {
       -- delay between pressing a key and opening which-key (milliseconds)
       -- this setting is independent of vim.opt.timeoutlen

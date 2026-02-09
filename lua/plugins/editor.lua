@@ -7,6 +7,7 @@ return {
   -- Git signs
   { -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
+    event = { 'BufReadPre', 'BufNewFile' },
     opts = {
       signs = {
         add = { text = '+' },
@@ -21,6 +22,7 @@ return {
   -- Todo comments
   {
     'folke/todo-comments.nvim',
+    event = 'VeryLazy',
     dependencies = { 'nvim-lua/plenary.nvim' },
     opts = {
       -- your configuration comes here
@@ -32,10 +34,13 @@ return {
   -- Toggle terminal
   {
     'akinsho/toggleterm.nvim',
+    cmd = { 'ToggleTerm', 'TermExec' },
+    keys = {
+      { '<C-`>', '<cmd>ToggleTerm<CR>', desc = 'Toggle terminal' },
+    },
     config = function()
       require('toggleterm').setup {
         size = 10, -- Default terminal height
-        open_mapping = [[<C-`>]], -- You can change this if you prefer a different key for opening the terminal
         direction = 'horizontal', -- Make the terminal horizontal
       }
     end,
@@ -44,6 +49,7 @@ return {
   -- Treesitter
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
+    event = { 'BufReadPost', 'BufNewFile' },
     branch = 'master',
     build = ':TSUpdate',
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
@@ -60,9 +66,6 @@ return {
         'query',
         'vim',
         'vimdoc',
-        'tsx',
-        'typescript',
-        'javascript',
       },
       -- Autoinstall languages that are not installed
       auto_install = true,
@@ -85,6 +88,7 @@ return {
   -- Auto tag
   {
     'windwp/nvim-ts-autotag',
+    ft = { 'html', 'xml' },
     config = function()
       require('nvim-ts-autotag').setup {
         opts = {
@@ -108,6 +112,7 @@ return {
   -- Mini.nvim collection
   { -- Collection of various small independent plugins/modules
     'echasnovski/mini.nvim',
+    event = 'VeryLazy',
     config = function()
       -- Better Around/Inside textobjects
       --
@@ -153,11 +158,12 @@ return {
   },
 
   -- Wrap width
-  { 'rickhowe/wrapwidth', config = function() end },
+  { 'rickhowe/wrapwidth', ft = { 'markdown', 'text' }, config = function() end },
 
   -- Better indent guides
   {
     'lukas-reineke/indent-blankline.nvim',
+    event = { 'BufReadPost', 'BufNewFile' },
     main = 'ibl',
     config = function()
       require('ibl').setup {
